@@ -58,7 +58,7 @@ class CurrencyConverterState extends Equatable {
       availableRates: [egp, usd],
       fromCurrency: egp,
       toCurrency: usd,
-      fromAmountText: '1',
+      fromAmountText: '',
       toAmountText: '',
       lastUpdated: now,
       isOffline: false,

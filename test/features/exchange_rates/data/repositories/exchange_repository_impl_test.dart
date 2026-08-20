@@ -53,47 +53,33 @@ void main() {
       // Act
       final result = await repository.getLatestRates();
 
-      // Assert
       verify(() => mockRemoteDataSource.getLatestRates()).called(1);
       verify(() => mockLocalDataSource.cacheLatestRates(tRatesList)).called(1);
       expect(result, Right(tRatesList));
     });
 
     test('when device is online but remote call fails, should fallback to cache', () async {
-      // Arrange
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       when(() => mockRemoteDataSource.getLatestRates()).thenThrow(const ServerException('Network down'));
       when(() => mockLocalDataSource.getCachedLatestRates()).thenAnswer((_) async => tRatesList);
 
-      // Act
       final result = await repository.getLatestRates();
-
-      // Assert
       expect(result, Right(tRatesList));
     });
 
     test('when device is offline, should return cached data directly', () async {
-      // Arrange
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
       when(() => mockLocalDataSource.getCachedLatestRates()).thenAnswer((_) async => tRatesList);
-
-      // Act
       final result = await repository.getLatestRates();
-
-      // Assert
       verifyZeroInteractions(mockRemoteDataSource);
       expect(result, Right(tRatesList));
     });
 
     test('when device is offline and cache is empty, should return CacheFailure', () async {
-      // Arrange
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
       when(() => mockLocalDataSource.getCachedLatestRates()).thenThrow(const CacheException('No data'));
-
-      // Act
       final result = await repository.getLatestRates();
 
-      // Assert
       expect(result.isLeft(), true);
       result.fold(
         (failure) => expect(failure, isA<CacheFailure>()),

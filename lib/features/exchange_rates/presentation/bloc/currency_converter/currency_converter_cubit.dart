@@ -64,9 +64,11 @@ class CurrencyConverterCubit extends Cubit<CurrencyConverterState> {
               orElse: () => allRates.length > 1 ? allRates[1] : egpCurrency,
             );
 
-        // Calculate initial amounts
-        final initialFromText = state.fromAmountText.isEmpty ? '1' : state.fromAmountText;
-        final initialToText = _calculateConversion(initialFromText, from, to);
+        final initialFromText = state.fromAmountText;
+        final initialToText = initialFromText.trim().isEmpty
+            ? ''
+            : _calculateConversion(initialFromText, from, to);
+
 
         emit(state.copyWith(
           isLoading: false,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:task_axis/core/helpers/extensions.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -75,7 +76,6 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
           ],
         ),
       ),
-
       body: BlocBuilder<RatesListBloc, RatesListState>(
         builder: (context, state) {
           if (state is RatesListLoading) {
@@ -139,7 +139,6 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
                     ),
                   ),
 
-                  // Market Rates List
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
@@ -147,8 +146,7 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
                         return RateCard(
                           rate: rateItem,
                           onTap: () {
-                            Navigator.pushNamed(
-                              context,
+                            context.pushNamed(
                               Routes.currencyDetail,
                               arguments: rateItem,
                             );

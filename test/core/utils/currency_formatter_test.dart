@@ -4,7 +4,6 @@ import 'package:task_axis/core/utils/currency_formatter.dart';
 void main() {
   group('CurrencyFormatter', () {
     test('invertRate calculates 1 / rate correctly', () {
-      // 1 EGP = 0.02 USD => 1 USD = 50.0 EGP
       final inverted = CurrencyFormatter.invertRate(0.02);
       expect(inverted, 50.0);
     });

@@ -57,11 +57,9 @@ void main() {
   });
 
   test('emits [RatesListLoading, RatesListLoaded] when FetchRatesEvent is added and online', () async {
-    // Arrange
     when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
     when(() => mockGetLatestRates()).thenAnswer((_) async => Right(tRatesList));
 
-    // Assert Later
     final expectedStates = [
       isA<RatesListLoading>(),
       isA<RatesListLoaded>().having((s) => s.rates, 'rates', tRatesList),
@@ -69,16 +67,13 @@ void main() {
 
     expectLater(bloc.stream, emitsInOrder(expectedStates));
 
-    // Act
     bloc.add(const FetchRatesEvent());
   });
 
   test('emits [RatesListLoading, RatesListLoadedFromCache] when FetchRatesEvent is added and offline', () async {
-    // Arrange
     when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
     when(() => mockGetLatestRates()).thenAnswer((_) async => Right(tRatesList));
 
-    // Assert Later
     final expectedStates = [
       isA<RatesListLoading>(),
       isA<RatesListLoadedFromCache>().having((s) => s.rates, 'rates', tRatesList),
@@ -86,16 +81,13 @@ void main() {
 
     expectLater(bloc.stream, emitsInOrder(expectedStates));
 
-    // Act
     bloc.add(const FetchRatesEvent());
   });
 
   test('emits [RatesListLoading, RatesListError] when GetLatestRates fails', () async {
-    // Arrange
     when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
     when(() => mockGetLatestRates()).thenAnswer((_) async => const Left(ServerFailure('API error')));
 
-    // Assert Later
     final expectedStates = [
       isA<RatesListLoading>(),
       isA<RatesListError>().having((s) => s.message, 'message', 'API error'),
@@ -103,7 +95,6 @@ void main() {
 
     expectLater(bloc.stream, emitsInOrder(expectedStates));
 
-    // Act
     bloc.add(const FetchRatesEvent());
   });
 }

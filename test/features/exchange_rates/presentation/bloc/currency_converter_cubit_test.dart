@@ -7,6 +7,7 @@ import 'package:task_axis/features/exchange_rates/domain/usecases/get_latest_rat
 import 'package:task_axis/features/exchange_rates/presentation/bloc/currency_converter/currency_converter_cubit.dart';
 
 class MockGetLatestRates extends Mock implements GetLatestRates {}
+
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
@@ -32,7 +33,7 @@ void main() {
     code: 'USD',
     name: 'US Dollar',
     flag: '🇺🇸',
-    rate: 50.0, 
+    rate: 50.0,
     change: 0.1,
     percentageChange: 0.2,
     isStrengthening: false,
@@ -44,7 +45,7 @@ void main() {
     code: 'EUR',
     name: 'Euro',
     flag: '🇪🇺',
-    rate: 55.0, 
+    rate: 55.0,
     change: 0.2,
     percentageChange: 0.3,
     isStrengthening: false,
@@ -63,8 +64,8 @@ void main() {
     expect(cubit.state.isLoading, false);
     expect(cubit.state.fromCurrency.code, 'EGP');
     expect(cubit.state.toCurrency.code, 'USD');
-    expect(cubit.state.fromAmountText, '1');
-    expect(cubit.state.toAmountText, '0.02'); 
+    expect(cubit.state.fromAmountText, '');
+    expect(cubit.state.toAmountText, '');
   });
 
   test('onFromAmountChanged updates toAmountText in real time', () async {
@@ -96,11 +97,13 @@ void main() {
     when(() => mockGetLatestRates()).thenAnswer((_) async => Right(tRates));
 
     await cubit.loadRates();
-    cubit.swapCurrencies(); 
+    cubit.onFromAmountChanged('100');
+    cubit.swapCurrencies();
 
     expect(cubit.state.fromCurrency.code, 'USD');
     expect(cubit.state.toCurrency.code, 'EGP');
-    expect(cubit.state.fromAmountText, '1');
-    expect(cubit.state.toAmountText, '50');
+    expect(cubit.state.fromAmountText, '100');
+    expect(cubit.state.toAmountText, '5000');
   });
+
 }
