@@ -8,5 +8,5 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupGetIt();
   await ScreenUtil.ensureScreenSize();
-  runApp(DocApp(appRouter: AppRouter()));
+  runApp(TaskAxisApp(appRouter: AppRouter()));
 }
