@@ -11,6 +11,7 @@ import 'package:task_axis/features/exchange_rates/data/repositories/exchange_rep
 import 'package:task_axis/features/exchange_rates/domain/repositories/exchange_repository.dart';
 import 'package:task_axis/features/exchange_rates/domain/usecases/get_historical_rates.dart';
 import 'package:task_axis/features/exchange_rates/domain/usecases/get_latest_rates.dart';
+import 'package:task_axis/features/exchange_rates/presentation/bloc/currency_converter/currency_converter_cubit.dart';
 import 'package:task_axis/features/exchange_rates/presentation/bloc/currency_detail/currency_detail_bloc.dart';
 import 'package:task_axis/features/exchange_rates/presentation/bloc/rates_list/rates_list_bloc.dart';
 
@@ -71,5 +72,10 @@ Future<void> setupGetIt() async {
   getIt.registerFactory<CurrencyDetailBloc>(() => CurrencyDetailBloc(
         getHistoricalRates: getIt<GetHistoricalRates>(),
       ));
+  getIt.registerFactory<CurrencyConverterCubit>(() => CurrencyConverterCubit(
+        getLatestRates: getIt<GetLatestRates>(),
+        networkInfo: getIt<NetworkInfo>(),
+      ));
 }
+
 

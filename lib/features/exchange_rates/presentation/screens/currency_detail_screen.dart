@@ -52,6 +52,8 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
         ),
         title: Text('${rate.code} / EGP', style: AppTextStyles.appBarTitle),
       ),
+
+
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
         child: Column(

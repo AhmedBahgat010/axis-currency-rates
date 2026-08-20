@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_axis/core/routing/routes.dart';
 import 'package:task_axis/features/exchange_rates/domain/entities/exchange_rate.dart';
+import 'package:task_axis/features/exchange_rates/presentation/bloc/currency_converter/currency_converter_cubit.dart';
 import 'package:task_axis/features/exchange_rates/presentation/bloc/currency_detail/currency_detail_bloc.dart';
 import 'package:task_axis/features/exchange_rates/presentation/bloc/rates_list/rates_list_bloc.dart';
 import 'package:task_axis/features/exchange_rates/presentation/screens/currency_detail_screen.dart';
@@ -15,11 +16,15 @@ class AppRouter {
     switch (settings.name) {
       case Routes.exchangeRatesList:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => getIt<RatesListBloc>(),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => getIt<RatesListBloc>()),
+              BlocProvider(create: (context) => getIt<CurrencyConverterCubit>()),
+            ],
             child: const ExchangeRatesListScreen(),
           ),
         );
+
       case Routes.currencyDetail:
         final rate = arguments as ExchangeRate;
         return MaterialPageRoute(
@@ -33,3 +38,5 @@ class AppRouter {
     }
   }
 }
+
+
