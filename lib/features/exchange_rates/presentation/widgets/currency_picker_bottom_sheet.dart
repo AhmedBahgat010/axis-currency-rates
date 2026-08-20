@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:task_axis/core/helpers/extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../domain/entities/exchange_rate.dart';
@@ -141,7 +142,7 @@ class _CurrencyPickerBottomSheetState extends State<CurrencyPickerBottomSheet> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => context.pop(),
                   icon: const Icon(Icons.close_rounded),
                   color: AppColors.textSecondary,
                   padding: EdgeInsets.zero,
@@ -223,7 +224,7 @@ class _CurrencyPickerBottomSheetState extends State<CurrencyPickerBottomSheet> {
                       return InkWell(
                         onTap: () {
                           widget.onSelected(item);
-                          Navigator.pop(context);
+                          context.pop();
                         },
                         borderRadius: BorderRadius.circular(14.r),
                         child: AnimatedContainer(
