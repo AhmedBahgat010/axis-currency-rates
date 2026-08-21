@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_axis/core/helpers/extensions.dart';
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -61,17 +62,11 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
         ),
         title: Row(
           children: [
-            Container(
-              padding: EdgeInsets.all(8.r),
-              decoration: BoxDecoration(
-                gradient: AppColors.primaryGradient,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Icon(
-                Icons.currency_exchange_rounded,
-                size: 20.sp,
-                color: AppColors.background,
-              ),
+            Image.asset(
+              AppAssets.logo,
+              width: 40.r,
+              height: 40.r,
+              fit: BoxFit.contain,
             ),
             SizedBox(width: 12.w),
             Column(

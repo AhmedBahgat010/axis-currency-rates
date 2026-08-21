@@ -8,20 +8,23 @@ class AppColors {
   static const Color cardBorder = Color(0xFF1E293B);
   static const Color cardBorderGlow = Color(0xFF334155);
 
-  // Gradient Accents (Gold to Teal)
-  static const Color gold = Color(0xFFFFD700);
-  static const Color goldDark = Color(0xFFD4AF37);
-  static const Color teal = Color(0xFF00F2FE);
-  static const Color cyan = Color(0xFF4FACFE);
+  // Brand Colors & Gradient Accents (#10CDA8 & #14B8D1)
+  static const Color brandPrimary = Color(0xFF10CDA8);
+  static const Color brandSecondary = Color(0xFF14B8D1);
+
+  static const Color gold = Color(0xFF14B8D1);
+  static const Color goldDark = Color(0xFF10CDA8);
+  static const Color teal = Color(0xFF10CDA8);
+  static const Color cyan = Color(0xFF14B8D1);
 
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [gold, teal],
+    colors: [brandPrimary, brandSecondary],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   static const LinearGradient cardGlowGradient = LinearGradient(
-    colors: [Color(0x20FFD700), Color(0x2000F2FE)],
+    colors: [Color(0x2010CDA8), Color(0x2014B8D1)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
