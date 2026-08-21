@@ -12,6 +12,9 @@ class ExchangeRepositoryImpl implements ExchangeRepository {
   final ExchangeLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
+  Future<Either<Failure, List<ExchangeRate>>>? _inFlightLatestRates;
+  final Map<String, Future<Either<Failure, List<double>>>> _inFlightHistorical = {};
+
   ExchangeRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
@@ -19,7 +22,19 @@ class ExchangeRepositoryImpl implements ExchangeRepository {
   });
 
   @override
-  Future<Either<Failure, List<ExchangeRate>>> getLatestRates() async {
+  Future<Either<Failure, List<ExchangeRate>>> getLatestRates() {
+    if (_inFlightLatestRates != null) {
+      return _inFlightLatestRates!;
+    }
+
+    final future = _fetchLatestRatesInternal();
+    _inFlightLatestRates = future;
+    return future.whenComplete(() {
+      _inFlightLatestRates = null;
+    });
+  }
+
+  Future<Either<Failure, List<ExchangeRate>>> _fetchLatestRatesInternal() async {
     final bool isOnline = await networkInfo.isConnected;
 
     if (isOnline) {
@@ -51,7 +66,20 @@ class ExchangeRepositoryImpl implements ExchangeRepository {
   }
 
   @override
-  Future<Either<Failure, List<double>>> getHistoricalRates(String currencyCode) async {
+  Future<Either<Failure, List<double>>> getHistoricalRates(String currencyCode) {
+    final key = currencyCode.toUpperCase();
+    if (_inFlightHistorical.containsKey(key)) {
+      return _inFlightHistorical[key]!;
+    }
+
+    final future = _fetchHistoricalRatesInternal(key);
+    _inFlightHistorical[key] = future;
+    return future.whenComplete(() {
+      _inFlightHistorical.remove(key);
+    });
+  }
+
+  Future<Either<Failure, List<double>>> _fetchHistoricalRatesInternal(String currencyCode) async {
     // Try local cache first
     try {
       final cachedHistory = await localDataSource.getCachedHistoricalRates(currencyCode);

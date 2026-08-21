@@ -11,6 +11,7 @@ abstract class ExchangeRemoteDataSource {
 
 class ExchangeRemoteDataSourceImpl implements ExchangeRemoteDataSource {
   final ApiService apiService;
+  final Map<String, Map<String, dynamic>> _dateCache = {};
 
   ExchangeRemoteDataSourceImpl(this.apiService);
 
@@ -44,9 +45,14 @@ class ExchangeRemoteDataSourceImpl implements ExchangeRemoteDataSource {
 
       final historicalFutures = pastDates.map((date) {
         final dateKey = CurrencyFormatter.formatDateKey(date);
+        if (_dateCache.containsKey(dateKey)) {
+          return Future.value(_dateCache[dateKey]);
+        }
         return apiService.getHistoricalRates(dateKey).then<Map<String, dynamic>?>((res) {
           if (res['egp'] is Map<String, dynamic>) {
-            return Map<String, dynamic>.from(res['egp']);
+            final map = Map<String, dynamic>.from(res['egp']);
+            _dateCache[dateKey] = map;
+            return map;
           }
           return null;
         }).catchError((_) => null);
@@ -126,9 +132,18 @@ class ExchangeRemoteDataSourceImpl implements ExchangeRemoteDataSource {
 
       final futures = dates.map((date) {
         final dateKey = CurrencyFormatter.formatDateKey(date);
+        if (_dateCache.containsKey(dateKey)) {
+          final cached = _dateCache[dateKey]!;
+          final raw = (cached[codeLower] as num?)?.toDouble();
+          if (raw != null && raw > 0) {
+            return Future.value(CurrencyFormatter.invertRate(raw));
+          }
+        }
         return apiService.getHistoricalRates(dateKey).then<double?>((res) {
           if (res['egp'] is Map<String, dynamic>) {
-            final raw = (res['egp'][codeLower] as num?)?.toDouble();
+            final map = Map<String, dynamic>.from(res['egp']);
+            _dateCache[dateKey] = map;
+            final raw = (map[codeLower] as num?)?.toDouble();
             if (raw != null && raw > 0) {
               return CurrencyFormatter.invertRate(raw);
             }

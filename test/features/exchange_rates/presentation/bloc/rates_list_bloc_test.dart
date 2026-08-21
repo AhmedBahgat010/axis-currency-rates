@@ -97,4 +97,29 @@ void main() {
 
     bloc.add(const FetchRatesEvent());
   });
+
+  group('Connectivity restoration', () {
+    test('does NOT trigger refresh when initial connectivity stream emits online without prior disconnect', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockGetLatestRates()).thenAnswer((_) async => Right(tRatesList));
+
+      connectivityController.add([ConnectivityResult.wifi]);
+      await pumpEventQueue();
+
+      verifyNever(() => mockGetLatestRates());
+    });
+
+    test('automatically triggers refresh when connectivity is restored after being offline', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockGetLatestRates()).thenAnswer((_) async => Right(tRatesList));
+
+      connectivityController.add([ConnectivityResult.none]);
+      await pumpEventQueue();
+
+      connectivityController.add([ConnectivityResult.wifi]);
+      await pumpEventQueue();
+
+      verify(() => mockGetLatestRates()).called(1);
+    });
+  });
 }

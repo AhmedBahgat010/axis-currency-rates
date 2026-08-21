@@ -10,6 +10,7 @@ class RatesListBloc extends Bloc<RatesListEvent, RatesListState> {
   final GetLatestRates getLatestRates;
   final NetworkInfo networkInfo;
   StreamSubscription? _connectivitySubscription;
+  bool _wasDisconnected = false;
 
   RatesListBloc({
     required this.getLatestRates,
@@ -19,7 +20,11 @@ class RatesListBloc extends Bloc<RatesListEvent, RatesListState> {
     on<ConnectivityRestoredEvent>(_onConnectivityRestored);
 
     _connectivitySubscription = networkInfo.onConnectivityChanged.listen((results) {
-      if (!results.contains(ConnectivityResult.none)) {
+      final isOffline = results.contains(ConnectivityResult.none);
+      if (isOffline) {
+        _wasDisconnected = true;
+      } else if (_wasDisconnected) {
+        _wasDisconnected = false;
         add(const ConnectivityRestoredEvent());
       }
     });

@@ -25,6 +25,59 @@ class CurrencyConverterCubit extends Cubit<CurrencyConverterState> {
     lastUpdated: DateTime.now(),
   );
 
+  /// Set rates directly from already-loaded data (e.g. from RatesListBloc)
+  void setRates(
+    List<ExchangeRate> fetchedRates, {
+    bool isOffline = false,
+    ExchangeRate? initialFrom,
+    ExchangeRate? initialTo,
+  }) {
+    const allowedCurrencies = {'EGP', 'USD', 'EUR', 'SAR', 'JPY', 'GBP'};
+    final List<ExchangeRate> allRates = [egpCurrency];
+    for (final r in fetchedRates) {
+      final code = r.code.toUpperCase();
+      if (code != 'EGP' && allowedCurrencies.contains(code)) {
+        allRates.add(r);
+      }
+    }
+
+    ExchangeRate from = initialFrom ??
+        allRates.firstWhere(
+          (r) => r.code == state.fromCurrency.code,
+          orElse: () => allRates.firstWhere(
+            (r) => r.code == 'EGP',
+            orElse: () => egpCurrency,
+          ),
+        );
+    ExchangeRate to = initialTo ??
+        allRates.firstWhere(
+          (r) => r.code == state.toCurrency.code,
+          orElse: () => allRates.firstWhere(
+            (r) => r.code == 'USD',
+            orElse: () => allRates.length > 1 ? allRates[1] : egpCurrency,
+          ),
+        );
+
+    final initialFromText = state.fromAmountText;
+    final initialToText = initialFromText.trim().isEmpty
+        ? ''
+        : _calculateConversion(initialFromText, from, to);
+
+    emit(state.copyWith(
+      isLoading: false,
+      availableRates: allRates,
+      fromCurrency: from,
+      toCurrency: to,
+      fromAmountText: initialFromText,
+      toAmountText: initialToText,
+      lastUpdated: fetchedRates.isNotEmpty
+          ? fetchedRates.first.lastUpdated
+          : DateTime.now(),
+      isOffline: isOffline,
+      lastEditedIsFrom: true,
+    ));
+  }
+
   /// Load currency rates
   Future<void> loadRates({
     ExchangeRate? initialFrom,
@@ -43,46 +96,12 @@ class CurrencyConverterCubit extends Cubit<CurrencyConverterState> {
         ));
       },
       (fetchedRates) {
-        const allowedCurrencies = {'EGP', 'USD', 'EUR', 'SAR', 'JPY', 'GBP'};
-        final List<ExchangeRate> allRates = [egpCurrency];
-        for (final r in fetchedRates) {
-          final code = r.code.toUpperCase();
-          if (code != 'EGP' && allowedCurrencies.contains(code)) {
-            allRates.add(r);
-          }
-        }
-
-
-        ExchangeRate from = initialFrom ??
-            allRates.firstWhere(
-              (r) => r.code == 'EGP',
-              orElse: () => egpCurrency,
-            );
-        ExchangeRate to = initialTo ??
-            allRates.firstWhere(
-              (r) => r.code == 'USD',
-              orElse: () => allRates.length > 1 ? allRates[1] : egpCurrency,
-            );
-
-        final initialFromText = state.fromAmountText;
-        final initialToText = initialFromText.trim().isEmpty
-            ? ''
-            : _calculateConversion(initialFromText, from, to);
-
-
-        emit(state.copyWith(
-          isLoading: false,
-          availableRates: allRates,
-          fromCurrency: from,
-          toCurrency: to,
-          fromAmountText: initialFromText,
-          toAmountText: initialToText,
-          lastUpdated: fetchedRates.isNotEmpty
-              ? fetchedRates.first.lastUpdated
-              : DateTime.now(),
+        setRates(
+          fetchedRates,
           isOffline: !isConnected,
-          lastEditedIsFrom: true,
-        ));
+          initialFrom: initialFrom,
+          initialTo: initialTo,
+        );
       },
     );
   }
