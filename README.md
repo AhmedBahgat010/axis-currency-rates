@@ -4,11 +4,19 @@ A modern, high-performance Flutter application for tracking live exchange rates 
 
 ---
 
-## 📸 Screenshots & Preview
+## 🎨 Brand & Color System
 
-| Home Screen & Live Rates | Offline Mode Caching | Brand & Color System |
+<p align="center">
+  <img src="docs/screenshots/brand_system.png" width="100%" alt="Brand & Color System"/>
+</p>
+
+---
+
+## 📸 App Screenshots
+
+| Home Screen & Live Rates | 7-Day Price Action Chart | Offline Mode Caching |
 | :---: | :---: | :---: |
-| <img src="docs/screenshots/home_screen.png" width="260" alt="Home Screen"/> | <img src="docs/screenshots/offline_mode.png" width="260" alt="Offline Mode"/> | <img src="docs/screenshots/brand_system.png" width="340" alt="Brand & Color System"/> |
+| <img src="docs/screenshots/home_screen.png" width="260" alt="Home Screen"/> | <img src="docs/screenshots/detail_screen.png" width="260" alt="Detail Screen"/> | <img src="docs/screenshots/offline_mode.png" width="260" alt="Offline Mode"/> |
 
 ---
 
