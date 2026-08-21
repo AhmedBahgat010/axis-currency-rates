@@ -9,6 +9,9 @@ import '../bloc/currency_converter/currency_converter_state.dart';
 import 'currency_card.dart';
 import 'currency_picker_bottom_sheet.dart';
 
+import 'package:task_axis/l10n/app_localizations.dart';
+
+
 class QuickConverterHeaderCard extends StatefulWidget {
   const QuickConverterHeaderCard({super.key});
 
@@ -59,8 +62,30 @@ class _QuickConverterHeaderCardState extends State<QuickConverterHeaderCard> {
     }
   }
 
+  String _getLocalizedCurrencySymbol(BuildContext context, String code) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (code.toUpperCase()) {
+      case 'EGP':
+        return l10n.egpSymbol;
+      case 'USD':
+        return l10n.usdSymbol;
+      case 'EUR':
+        return l10n.eurSymbol;
+      case 'GBP':
+        return l10n.gbpSymbol;
+      case 'SAR':
+        return l10n.sarSymbol;
+      case 'JPY':
+        return l10n.jpySymbol;
+      default:
+        return code;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocConsumer<CurrencyConverterCubit, CurrencyConverterState>(
       listener: (context, state) {
         _syncControllers(state);
@@ -74,8 +99,12 @@ class _QuickConverterHeaderCardState extends State<QuickConverterHeaderCard> {
         final toRate = state.toCurrency;
         final exchangeRateVal = state.currentExchangeRate;
 
+        final fromSymbol = _getLocalizedCurrencySymbol(context, fromRate.code);
+        final toSymbol = _getLocalizedCurrencySymbol(context, toRate.code);
+
         final exchangeRateText =
-            '1 ${fromRate.code} = ${CurrencyFormatter.formatRate(exchangeRateVal, decimals: exchangeRateVal < 1 ? 4 : 2)} ${toRate.code}';
+            '1 $fromSymbol = ${CurrencyFormatter.formatRate(exchangeRateVal, decimals: exchangeRateVal < 1 ? 4 : 2)} $toSymbol';
+
 
         return Container(
           margin: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
@@ -111,7 +140,7 @@ class _QuickConverterHeaderCardState extends State<QuickConverterHeaderCard> {
                       ),
                       SizedBox(width: 8.w),
                       Text(
-                        'QUICK CONVERTER',
+                        l10n.quickConverter,
                         style: AppTextStyles.sectionLabelSmall.copyWith(
                           color: AppColors.teal,
                           fontWeight: FontWeight.w800,
@@ -154,7 +183,7 @@ class _QuickConverterHeaderCardState extends State<QuickConverterHeaderCard> {
                     children: [
                       // Top Card (FROM)
                       CurrencyCard(
-                        label: 'From',
+                        label: l10n.from,
                         currency: fromRate,
                         controller: _fromController,
                         focusNode: _fromFocusNode,
@@ -182,7 +211,7 @@ class _QuickConverterHeaderCardState extends State<QuickConverterHeaderCard> {
 
                       // Bottom Card (TO)
                       CurrencyCard(
-                        label: 'To',
+                        label: l10n.to,
                         currency: toRate,
                         controller: _toController,
                         focusNode: _toFocusNode,
@@ -206,10 +235,9 @@ class _QuickConverterHeaderCardState extends State<QuickConverterHeaderCard> {
                         },
                       ),
                     ],
-                  ),
-
                   // Floating Swap Button
-                  AnimatedRotation(
+
+                  ),AnimatedRotation(
                     turns: _turns,
                     duration: const Duration(milliseconds: 350),
                     curve: Curves.easeInOutBack,

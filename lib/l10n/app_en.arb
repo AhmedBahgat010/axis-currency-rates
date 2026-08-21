@@ -1,0 +1,62 @@
+{
+  "@@locale": "en",
+  "appTitle": "Currency Axis",
+  "baseCurrencySubtitle": "Base: Egyptian Pound (EGP)",
+  "marketRates": "MARKET RATES",
+  "quickConverter": "QUICK CONVERTER",
+  "exchangeRate": "EXCHANGE RATE",
+  "lastUpdated": "LAST UPDATED",
+  "updatedAt": "Updated {date}",
+  "@updatedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "from": "From",
+  "to": "To",
+  "source": "SOURCE",
+  "target": "TARGET",
+  "selectCurrency": "Select Currency",
+  "searchCurrency": "Search currency code or name...",
+  "noCurrenciesFound": "No currencies found",
+  "showingCachedRatesFrom": "Showing cached rates from {date}",
+  "@showingCachedRatesFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "offlineMode": "Offline Mode",
+  "retry": "Retry",
+  "errorTitle": "Something went wrong",
+  "priceAction7Days": "7-Day Price Action",
+  "interactiveChart": "Interactive Chart",
+  "change24h": "24h Change",
+  "highestRate": "Highest Rate",
+  "lowestRate": "Lowest Rate",
+  "averageRate": "Average Rate",
+  "egpStrengthened": "EGP Strengthened",
+  "egpWeakened": "EGP Weakened",
+  "settings": "Settings",
+  "language": "Language",
+  "english": "English",
+  "arabic": "العربية",
+  "currentRate": "Current Rate",
+  "convert": "Convert",
+  "egpName": "Egyptian Pound",
+  "usdName": "US Dollar",
+  "eurName": "Euro",
+  "gbpName": "British Pound",
+  "sarName": "Saudi Riyal",
+  "jpyName": "Japanese Yen",
+  "egpSymbol": "EGP",
+  "usdSymbol": "USD",
+  "eurSymbol": "EUR",
+  "gbpSymbol": "GBP",
+  "sarSymbol": "SAR",
+  "jpySymbol": "JPY"
+}
+

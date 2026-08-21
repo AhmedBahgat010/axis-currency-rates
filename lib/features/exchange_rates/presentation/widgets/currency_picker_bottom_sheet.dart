@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_axis/core/helpers/extensions.dart';
+import 'package:task_axis/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../domain/entities/exchange_rate.dart';
@@ -88,8 +89,49 @@ class _CurrencyPickerBottomSheetState extends State<CurrencyPickerBottomSheet> {
     });
   }
 
+  String _getLocalizedCurrencyName(
+      BuildContext context, String code, String defaultName) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (code.toUpperCase()) {
+      case 'EGP':
+        return l10n.egpName;
+      case 'USD':
+        return l10n.usdName;
+      case 'EUR':
+        return l10n.eurName;
+      case 'GBP':
+        return l10n.gbpName;
+      case 'SAR':
+        return l10n.sarName;
+      default:
+        return defaultName;
+    }
+  }
+
+  String _getLocalizedCurrencySymbol(BuildContext context, String code) {
+
+    final l10n = AppLocalizations.of(context)!;
+    switch (code.toUpperCase()) {
+      case 'EGP':
+        return l10n.egpSymbol;
+      case 'USD':
+        return l10n.usdSymbol;
+      case 'EUR':
+        return l10n.eurSymbol;
+      case 'GBP':
+        return l10n.gbpSymbol;
+      case 'SAR':
+        return l10n.sarSymbol;
+      case 'JPY':
+        return l10n.jpySymbol;
+      default:
+        return code;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Container(
@@ -135,7 +177,7 @@ class _CurrencyPickerBottomSheetState extends State<CurrencyPickerBottomSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Select Currency',
+                  l10n.selectCurrency,
                   style: AppTextStyles.appBarTitle.copyWith(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w800,
@@ -170,7 +212,7 @@ class _CurrencyPickerBottomSheetState extends State<CurrencyPickerBottomSheet> {
                   fontSize: 14.sp,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Search currency code or name...',
+                  hintText: l10n.searchCurrency,
                   hintStyle: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 14.sp,
@@ -205,7 +247,7 @@ class _CurrencyPickerBottomSheetState extends State<CurrencyPickerBottomSheet> {
             child: _filteredCurrencies.isEmpty
                 ? Center(
                     child: Text(
-                      'No currencies found',
+                      l10n.noCurrenciesFound,
                       style: AppTextStyles.bodyPrimary,
                     ),
                   )
@@ -257,7 +299,7 @@ class _CurrencyPickerBottomSheetState extends State<CurrencyPickerBottomSheet> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      item.code,
+                                      _getLocalizedCurrencySymbol(context, item.code),
                                       style:
                                           AppTextStyles.currencyCode.copyWith(
                                         color: isSelected
@@ -268,12 +310,14 @@ class _CurrencyPickerBottomSheetState extends State<CurrencyPickerBottomSheet> {
                                     ),
                                     SizedBox(height: 2.h),
                                     Text(
-                                      item.name,
+                                      _getLocalizedCurrencyName(
+                                          context, item.code, item.name),
                                       style:
                                           AppTextStyles.currencyName.copyWith(
                                         color: AppColors.textSecondary,
                                       ),
                                     ),
+
                                   ],
                                 ),
                               ),
