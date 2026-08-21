@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_axis/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../bloc/locale_cubit.dart';
@@ -33,17 +34,11 @@ class SideDrawerWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(10.r),
-                    decoration: BoxDecoration(
-                      gradient: AppColors.primaryGradient,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(
-                      Icons.currency_exchange_rounded,
-                      size: 26.sp,
-                      color: AppColors.background,
-                    ),
+                  Image.asset(
+                    AppAssets.logo,
+                    width: 70.r,
+                    height: 70.r,
+                    fit: BoxFit.contain,
                   ),
                   SizedBox(height: 12.h),
                   Text(
