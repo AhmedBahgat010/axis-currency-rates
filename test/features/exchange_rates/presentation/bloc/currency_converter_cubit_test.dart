@@ -9,7 +9,6 @@ import 'package:task_axis/features/exchange_rates/presentation/bloc/currency_con
 class MockGetLatestRates extends Mock implements GetLatestRates {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
-
 void main() {
   late CurrencyConverterCubit cubit;
   late MockGetLatestRates mockGetLatestRates;

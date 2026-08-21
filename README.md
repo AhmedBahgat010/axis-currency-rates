@@ -1,6 +1,6 @@
 # 💱 Currency Axis (Task Axis)
 
-A modern, high-performance Flutter application for tracking live exchange rates against the **Egyptian Pound (EGP)**, featuring **7-day interactive historical charts**, **offline-first local caching (Hive)**, and built adhering strictly to **Clean Architecture** principles.
+A modern, high-performance Flutter application for tracking live exchange rates against the **Egyptian Pound (EGP)**, featuring **7-day interactive historical charts**, **offline-first local caching (Hive)**, **multi-language support (Arabic & English)**, and built adhering strictly to **Clean Architecture** principles.
 
 ---
 
@@ -33,35 +33,46 @@ A modern, high-performance Flutter application for tracking live exchange rates 
 - 📈 **7-Day Price Action Chart**: Interactive line chart (`fl_chart`) displaying 7-day rate trends for each currency.
 - 📦 **Offline-First Caching (Hive)**: Persists fetched rates locally so the app works seamlessly without an internet connection, displaying an offline banner with the exact last update timestamp.
 - 🔄 **Auto-Sync on Reconnect**: Automatically refreshes data when internet connectivity is restored.
-- 🎨 **Modern Dark UI**: Glassmorphic dark theme, custom sparklines, responsive layouts (`flutter_screenutil`), and smooth `Hero` animations.
+- 🌐 **Multi-Language & RTL Support**: Seamless switching between **Arabic** and **English** with full RTL layout support.
+- 🎨 **Modern Dark UI**: Glassmorphic dark theme, custom sparklines, responsive layouts (`flutter_screenutil`), and smooth animations.
 
 ---
 
 ## 🏗️ Architecture
 
-The project follows **Clean Architecture** guidelines, separated into 3 distinct layers:
+The project follows **Clean Architecture** guidelines, separated into modular layers:
 
 ```text
 lib/
 ├── core/
-│   ├── di/               # GetIt dependency injection setup
-│   ├── error/            # Failures & Exception classes
-│   ├── network/          # NetworkInfo & DioFactory
-│   ├── networking/       # Retrofit ApiService & ApiErrorModel
-│   ├── theme/            # AppColors, AppTextStyles & AppTheme
-│   └── utils/            # CurrencyFormatter & helpers
+│   ├── constants/        # App Constants & Keys
+│   ├── di/               # GetIt Dependency Injection setup
+│   ├── error/            # Failures & Exception handling
+│   ├── helpers/          # General helper functions
+│   ├── network/          # NetworkInfo & Connectivity Checker
+│   ├── networking/       # Retrofit ApiService, DioFactory & Error Models
+│   ├── routing/          # AppRouter & Named Routes
+│   ├── theme/            # AppColors, AppTextStyles & Theme Data
+│   └── utils/            # CurrencyFormatter & helper methods
 │
-└── features/
-    └── exchange_rates/
-        ├── data/         # Models (Hive & API), DataSources, RepositoryImpl
-        ├── domain/       # Entities, Repository Interfaces, UseCases
-        └── presentation/ # BLoCs, Screens & Custom Widgets
+├── features/
+│   ├── exchange_rates/   # Main Feature (Rates & Historical Charts)
+│   │   ├── data/         # Models (Hive & API), DataSources, RepositoryImpl
+│   │   ├── domain/       # Entities, Repository Interfaces, UseCases
+│   │   └── presentation/ # BLoCs/Cubits (RatesList, CurrencyDetail, Converter), Screens & Widgets
+│   │
+│   └── settings/         # Settings Feature (Theme & Language)
+│       └── presentation/ # LocaleCubit, ThemeCubit & Drawer Widget
+│
+├── l10n/                 # Localization (ARB files for AR/EN)
+├── doc_app.dart          # MaterialApp root configuration
+└── main.dart             # App entry point & initialization
 ```
 
 ### Layer Breakdown:
 1. **Domain Layer**: Contains business entities (`ExchangeRate`), repository interfaces (`ExchangeRepository`), and use cases (`GetLatestRates`, `GetHistoricalRates`). Independent of external frameworks.
 2. **Data Layer**: Manages remote data fetching (`Dio` / `Retrofit`) and local persistent caching (`Hive`). Implements repository interfaces.
-3. **Presentation Layer**: Handles UI rendering and state management using `BLoC` (`RatesListBloc`, `CurrencyDetailBloc`).
+3. **Presentation Layer**: Handles UI rendering and state management using `BLoC` & `Cubit` (`RatesListBloc`, `CurrencyDetailBloc`, `CurrencyConverterCubit`).
 
 ---
 
@@ -72,6 +83,8 @@ lib/
 - **Dependency Injection**: [`get_it`](https://pub.dev/packages/get_it)
 - **Local Storage**: [`hive`](https://pub.dev/packages/hive) & [`hive_flutter`](https://pub.dev/packages/hive_flutter)
 - **Networking**: [`dio`](https://pub.dev/packages/dio) & [`retrofit`](https://pub.dev/packages/retrofit)
+- **Connectivity**: [`connectivity_plus`](https://pub.dev/packages/connectivity_plus)
+- **Localization**: [`flutter_localizations`](https://api.flutter.dev/flutter/flutter_localizations/flutter_localizations-library.html) & `intl` (Arabic & English)
 - **Charts & Visualization**: [`fl_chart`](https://pub.dev/packages/fl_chart) & Custom Sparklines
 - **Responsive Layout**: [`flutter_screenutil`](https://pub.dev/packages/flutter_screenutil)
 - **Functional Programming**: [`dartz`](https://pub.dev/packages/dartz) (Either & Failures)
