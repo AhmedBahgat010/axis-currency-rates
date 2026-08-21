@@ -106,4 +106,14 @@ void main() {
     expect(cubit.state.toAmountText, '5000');
   });
 
+  test('setRates directly populates rates without making network calls', () {
+    cubit.setRates(tRates, isOffline: false);
+
+    expect(cubit.state.isLoading, false);
+    expect(cubit.state.isOffline, false);
+    expect(cubit.state.availableRates.map((r) => r.code).toList(), containsAll(['EGP', 'USD', 'EUR']));
+    expect(cubit.state.fromCurrency.code, 'EGP');
+    expect(cubit.state.toCurrency.code, 'USD');
+    verifyZeroInteractions(mockGetLatestRates);
+  });
 }

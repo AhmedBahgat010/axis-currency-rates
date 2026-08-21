@@ -35,12 +35,10 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
   void initState() {
     super.initState();
     context.read<RatesListBloc>().add(const FetchRatesEvent());
-    context.read<CurrencyConverterCubit>().loadRates();
   }
 
   Future<void> _onRefresh() async {
     context.read<RatesListBloc>().add(const FetchRatesEvent(isRefresh: true));
-    context.read<CurrencyConverterCubit>().loadRates();
   }
 
   @override
@@ -85,7 +83,20 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
           ],
         ),
       ),
-      body: BlocBuilder<RatesListBloc, RatesListState>(
+      body: BlocConsumer<RatesListBloc, RatesListState>(
+        listener: (context, state) {
+          if (state is RatesListLoaded) {
+            context.read<CurrencyConverterCubit>().setRates(
+                  state.rates,
+                  isOffline: false,
+                );
+          } else if (state is RatesListLoadedFromCache) {
+            context.read<CurrencyConverterCubit>().setRates(
+                  state.rates,
+                  isOffline: true,
+                );
+          }
+        },
         builder: (context, state) {
           if (state is RatesListLoading) {
             return const ShimmerListLoading();

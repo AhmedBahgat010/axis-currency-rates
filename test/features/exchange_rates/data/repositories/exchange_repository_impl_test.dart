@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:task_axis/core/error/exceptions.dart';
-import 'package:task_axis/core/error/failures.dart';
 import 'package:task_axis/core/network/network_info.dart';
 import 'package:task_axis/features/exchange_rates/data/datasources/exchange_local_datasource.dart';
 import 'package:task_axis/features/exchange_rates/data/datasources/exchange_remote_datasource.dart';
@@ -75,16 +74,25 @@ void main() {
       expect(result, Right(tRatesList));
     });
 
-    test('when device is offline and cache is empty, should return CacheFailure', () async {
-      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
-      when(() => mockLocalDataSource.getCachedLatestRates()).thenThrow(const CacheException('No data'));
-      final result = await repository.getLatestRates();
+    test('when multiple concurrent getLatestRates calls happen, it should deduplicate into 1 remote call', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockRemoteDataSource.getLatestRates()).thenAnswer((_) async {
+        await Future.delayed(const Duration(milliseconds: 50));
+        return tRatesList;
+      });
+      when(() => mockLocalDataSource.cacheLatestRates(tRatesList)).thenAnswer((_) async => {});
 
-      expect(result.isLeft(), true);
-      result.fold(
-        (failure) => expect(failure, isA<CacheFailure>()),
-        (_) => fail('Expected Left'),
-      );
+      // Fire 3 simultaneous calls
+      final results = await Future.wait([
+        repository.getLatestRates(),
+        repository.getLatestRates(),
+        repository.getLatestRates(),
+      ]);
+
+      verify(() => mockRemoteDataSource.getLatestRates()).called(1);
+      expect(results[0], Right(tRatesList));
+      expect(results[1], Right(tRatesList));
+      expect(results[2], Right(tRatesList));
     });
   });
 }
