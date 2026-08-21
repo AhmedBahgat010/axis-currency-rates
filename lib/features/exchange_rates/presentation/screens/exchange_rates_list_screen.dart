@@ -17,6 +17,10 @@ import '../widgets/quick_converter_header_card.dart';
 import '../widgets/rate_card.dart';
 import '../widgets/shimmer_loading.dart';
 
+import 'package:task_axis/l10n/app_localizations.dart';
+
+import '../../../settings/presentation/widgets/side_drawer_widget.dart';
+
 class ExchangeRatesListScreen extends StatefulWidget {
   const ExchangeRatesListScreen({super.key});
 
@@ -40,11 +44,21 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
+      drawer: const SideDrawerWidget(),
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
+        leading: Builder(
+          builder: (ctx) => IconButton(
+            icon: const Icon(Icons.menu_rounded),
+            color: AppColors.textPrimary,
+            onPressed: () => Scaffold.of(ctx).openDrawer(),
+          ),
+        ),
         title: Row(
           children: [
             Container(
@@ -64,11 +78,11 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Currency Axis',
+                  l10n.appTitle,
                   style: AppTextStyles.appBarTitle,
                 ),
                 Text(
-                  'Base: Egyptian Pound (EGP)',
+                  l10n.baseCurrencySubtitle,
                   style: AppTextStyles.appBarSubtitle,
                 ),
               ],
@@ -127,11 +141,13 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'MARKET RATES',
+                            l10n.marketRates,
                             style: AppTextStyles.sectionLabelSmall,
                           ),
                           Text(
-                            'Updated ${CurrencyFormatter.formatDateTime(lastUpdated)}',
+                            l10n.updatedAt(
+                              CurrencyFormatter.formatDateTime(lastUpdated),
+                            ),
                             style: AppTextStyles.timestampSmall,
                           ),
                         ],

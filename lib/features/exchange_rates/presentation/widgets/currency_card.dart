@@ -4,6 +4,8 @@ import 'package:task_axis/features/exchange_rates/domain/entities/exchange_rate.
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 
+import 'package:task_axis/l10n/app_localizations.dart';
+
 class CurrencyCard extends StatelessWidget {
   final String label;
   final ExchangeRate currency;
@@ -24,8 +26,50 @@ class CurrencyCard extends StatelessWidget {
     this.isTopCard = true,
   });
 
+  String _getLocalizedCurrencyName(
+      BuildContext context, String code, String defaultName) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (code.toUpperCase()) {
+      case 'EGP':
+        return l10n.egpName;
+      case 'USD':
+        return l10n.usdName;
+      case 'EUR':
+        return l10n.eurName;
+      case 'GBP':
+        return l10n.gbpName;
+      case 'JPY':
+        return l10n.jpyName;
+      default:
+        return defaultName;
+    }
+  }
+
+  String _getLocalizedCurrencySymbol(BuildContext context, String code) {
+
+    final l10n = AppLocalizations.of(context)!;
+    switch (code.toUpperCase()) {
+      case 'EGP':
+        return l10n.egpSymbol;
+      case 'USD':
+        return l10n.usdSymbol;
+      case 'EUR':
+        return l10n.eurSymbol;
+      case 'GBP':
+        return l10n.gbpSymbol;
+      case 'SAR':
+        return l10n.sarSymbol;
+      case 'JPY':
+        return l10n.jpySymbol;
+      default:
+        return code;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
@@ -66,7 +110,7 @@ class CurrencyCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: Text(
-                  isTopCard ? 'SOURCE' : 'TARGET',
+                  isTopCard ? l10n.source : l10n.target,
                   style: TextStyle(
                     fontSize: 9.sp,
                     fontWeight: FontWeight.w700,
@@ -104,7 +148,7 @@ class CurrencyCard extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  currency.code,
+                                  _getLocalizedCurrencySymbol(context, currency.code),
                                   style: AppTextStyles.currencyCode.copyWith(
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.w900,
@@ -118,9 +162,11 @@ class CurrencyCard extends StatelessWidget {
                                 ),
                               ],
                             ),
+
                             SizedBox(height: 2.h),
                             Text(
-                              currency.name,
+                              _getLocalizedCurrencyName(
+                                  context, currency.code, currency.name),
                               style: AppTextStyles.currencyName.copyWith(
                                 fontSize: 11.sp,
                                 color: AppColors.textSecondary,
@@ -135,6 +181,7 @@ class CurrencyCard extends StatelessWidget {
                   ),
                 ),
               ),
+
 
               SizedBox(width: 12.w),
 

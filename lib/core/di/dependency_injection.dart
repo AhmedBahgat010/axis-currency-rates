@@ -15,12 +15,19 @@ import 'package:task_axis/features/exchange_rates/presentation/bloc/currency_con
 import 'package:task_axis/features/exchange_rates/presentation/bloc/currency_detail/currency_detail_bloc.dart';
 import 'package:task_axis/features/exchange_rates/presentation/bloc/rates_list/rates_list_bloc.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_axis/features/settings/presentation/bloc/locale_cubit.dart';
+
 import '../networking/api_service.dart' show ApiService;
 import '../networking/dio_factory.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> setupGetIt() async {
+  // ── SharedPreferences ───────────────────────────────────────────────────
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+
   // ── Hive ─────────────────────────────────────────────────────────────────
   await Hive.initFlutter();
 
@@ -64,7 +71,10 @@ Future<void> setupGetIt() async {
   getIt.registerLazySingleton<GetLatestRates>(() => GetLatestRates(getIt<ExchangeRepository>()));
   getIt.registerLazySingleton<GetHistoricalRates>(() => GetHistoricalRates(getIt<ExchangeRepository>()));
 
-  // ── Blocs ─────────────────────────────────────────────────────────────────
+  // ── Blocs & Cubits ────────────────────────────────────────────────────────
+  getIt.registerLazySingleton<LocaleCubit>(() => LocaleCubit(
+        prefs: getIt<SharedPreferences>(),
+      ));
   getIt.registerFactory<RatesListBloc>(() => RatesListBloc(
         getLatestRates: getIt<GetLatestRates>(),
         networkInfo: getIt<NetworkInfo>(),
@@ -77,5 +87,6 @@ Future<void> setupGetIt() async {
         networkInfo: getIt<NetworkInfo>(),
       ));
 }
+
 
 

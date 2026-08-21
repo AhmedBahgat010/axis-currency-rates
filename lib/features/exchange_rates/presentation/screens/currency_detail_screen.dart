@@ -13,6 +13,8 @@ import '../bloc/currency_detail/currency_detail_state.dart';
 import '../widgets/error_retry_view.dart';
 import '../widgets/shimmer_loading.dart';
 
+import 'package:task_axis/l10n/app_localizations.dart';
+
 class CurrencyDetailScreen extends StatefulWidget {
   final ExchangeRate exchangeRate;
 
@@ -27,12 +29,56 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
   void initState() {
     super.initState();
     context.read<CurrencyDetailBloc>().add(
-      FetchCurrencyHistoryEvent(widget.exchangeRate.code),
-    );
+          FetchCurrencyHistoryEvent(widget.exchangeRate.code),
+        );
+  }
+
+  String _getLocalizedCurrencyName(
+      BuildContext context, String code, String defaultName) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (code.toUpperCase()) {
+      case 'EGP':
+        return l10n.egpName;
+      case 'USD':
+        return l10n.usdName;
+      case 'EUR':
+        return l10n.eurName;
+      case 'GBP':
+        return l10n.gbpName;
+      case 'SAR':
+        return l10n.sarName;
+      case 'JPY':
+        return l10n.jpyName;
+      default:
+        return defaultName;
+    }
+  }
+
+  String _getLocalizedCurrencySymbol(BuildContext context, String code) {
+
+    final l10n = AppLocalizations.of(context)!;
+    switch (code.toUpperCase()) {
+      case 'EGP':
+        return l10n.egpSymbol;
+      case 'USD':
+        return l10n.usdSymbol;
+      case 'EUR':
+        return l10n.eurSymbol;
+      case 'GBP':
+        return l10n.gbpSymbol;
+      case 'SAR':
+        return l10n.sarSymbol;
+      case 'JPY':
+        return l10n.jpySymbol;
+      default:
+        return code;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     // isStrengthening = EGP got stronger (foreign rate went down)
     // true  → ▼ green (good for EGP)
     // false → ▲ red   (bad for EGP)
@@ -41,6 +87,8 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
         ? AppColors.greenStrengthening
         : AppColors.redWeakening;
     final changeArrow = rate.isStrengthening ? '▼' : '▲';
+    final rateSymbol = _getLocalizedCurrencySymbol(context, rate.code);
+    final egpSymbol = _getLocalizedCurrencySymbol(context, 'EGP');
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -51,10 +99,8 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.pop(),
         ),
-        title: Text('${rate.code} / EGP', style: AppTextStyles.appBarTitle),
+        title: Text('$rateSymbol / $egpSymbol', style: AppTextStyles.appBarTitle),
       ),
-
-
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
         child: Column(
@@ -106,12 +152,16 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
                             child: Material(
                               color: Colors.transparent,
                               child: Text(
-                                rate.code,
+                                rateSymbol,
                                 style: AppTextStyles.screenTitle,
                               ),
                             ),
                           ),
-                          Text(rate.name, style: AppTextStyles.currencyName),
+                          Text(
+                            _getLocalizedCurrencyName(
+                                context, rate.code, rate.name),
+                            style: AppTextStyles.currencyName,
+                          ),
                         ],
                       ),
                     ],
@@ -126,9 +176,10 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
                         style: AppTextStyles.rateLarge,
                       ),
                       SizedBox(width: 8.w),
-                      Text('EGP', style: AppTextStyles.currencyUnit),
+                      Text(egpSymbol, style: AppTextStyles.currencyUnit),
                     ],
                   ),
+
                   SizedBox(height: 8.h),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +205,9 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
                         ),
                       ),
                       Text(
-                        'Last updated ${CurrencyFormatter.formatDateTime(rate.lastUpdated)}',
+                        l10n.updatedAt(
+                          CurrencyFormatter.formatDateTime(rate.lastUpdated),
+                        ),
                         style: AppTextStyles.timestampSmall,
                       ),
                     ],
@@ -168,14 +221,15 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('7-DAY PRICE ACTION', style: AppTextStyles.sectionLabel),
+                Text(l10n.priceAction7Days.toUpperCase(),
+                    style: AppTextStyles.sectionLabel),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
                     color: AppColors.cardSurfaceLight,
                     borderRadius: BorderRadius.circular(6.r),
                   ),
-                  child: Text('Interactive Chart', style: AppTextStyles.pill),
+                  child: Text(l10n.interactiveChart, style: AppTextStyles.pill),
                 ),
               ],
             ),
@@ -201,8 +255,8 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
                     child: ErrorRetryView(
                       message: state.message,
                       onRetry: () => context.read<CurrencyDetailBloc>().add(
-                        FetchCurrencyHistoryEvent(rate.code),
-                      ),
+                            FetchCurrencyHistoryEvent(rate.code),
+                          ),
                     ),
                   );
                 } else if (state is HistoryLoaded) {
@@ -302,7 +356,7 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
                             getTooltipItems: (touchedSpots) {
                               return touchedSpots.map((spot) {
                                 return LineTooltipItem(
-                                  '${spot.y.toStringAsFixed(4)} EGP',
+                                  '${spot.y.toStringAsFixed(4)} $egpSymbol',
                                   AppTextStyles.chartTooltip,
                                 );
                               }).toList();

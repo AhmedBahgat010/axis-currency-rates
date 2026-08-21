@@ -47,7 +47,6 @@ class _SparklinePainter extends CustomPainter {
     double minVal = data.reduce((a, b) => a < b ? a : b);
     double maxVal = data.reduce((a, b) => a > b ? a : b);
 
-    // Add slight padding to range
     if (minVal == maxVal) {
       minVal -= 1;
       maxVal += 1;
@@ -77,7 +76,6 @@ class _SparklinePainter extends CustomPainter {
     fillPath.lineTo(size.width, size.height);
     fillPath.close();
 
-    // Gradient fill under the sparkline
     final Paint fillPaint = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter,

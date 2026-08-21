@@ -6,11 +6,52 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../domain/entities/exchange_rate.dart';
 import 'sparkline.dart';
 
+import 'package:task_axis/l10n/app_localizations.dart';
+
 class RateCard extends StatelessWidget {
   final ExchangeRate rate;
   final VoidCallback onTap;
 
   const RateCard({super.key, required this.rate, required this.onTap});
+
+  String _getLocalizedCurrencyName(
+      BuildContext context, String code, String defaultName) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (code.toUpperCase()) {
+      case 'EGP':
+        return l10n.egpName;
+      case 'USD':
+        return l10n.usdName;
+      case 'EUR':
+        return l10n.eurName;
+      case 'GBP':
+        return l10n.gbpName;
+      case 'SAR':
+        return l10n.sarName;
+      default:
+        return defaultName;
+    }
+  }
+
+  String _getLocalizedCurrencySymbol(BuildContext context, String code) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (code.toUpperCase()) {
+      case 'EGP':
+        return l10n.egpSymbol;
+      case 'USD':
+        return l10n.usdSymbol;
+      case 'EUR':
+        return l10n.eurSymbol;
+      case 'GBP':
+        return l10n.gbpSymbol;
+      case 'SAR':
+        return l10n.sarSymbol;
+      case 'JPY':
+        return l10n.jpySymbol;
+      default:
+        return code;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +108,9 @@ class RateCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 14.w),
+                SizedBox(width: 12.w),
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -78,26 +119,30 @@ class RateCard extends StatelessWidget {
                         child: Material(
                           color: Colors.transparent,
                           child: Text(
-                            rate.code,
+                            _getLocalizedCurrencySymbol(context, rate.code),
                             style: AppTextStyles.currencyCode,
                           ),
                         ),
                       ),
                       SizedBox(height: 2.h),
-                      Text(
-                        rate.name,
-                        style: AppTextStyles.currencyName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          _getLocalizedCurrencyName(
+                              context, rate.code, rate.name),
+                          style: AppTextStyles.currencyName,
+                        ),
                       ),
                     ],
                   ),
                 ),
+                SizedBox(width: 8.w),
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Container(
-                    height: 38.h,
-                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    height: 36.h,
+                    padding: EdgeInsets.symmetric(horizontal: 2.w),
                     child: SparklineWidget(
                       data: rate.sparklineData,
                       lineColor: changeColor,
@@ -105,12 +150,12 @@ class RateCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: 8.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '${CurrencyFormatter.formatRate(rate.rate, decimals: 2)} EGP',
+                      '${CurrencyFormatter.formatRate(rate.rate, decimals: 2)} ${_getLocalizedCurrencySymbol(context, 'EGP')}',
                       style: AppTextStyles.rateSmall,
                     ),
                     SizedBox(height: 4.h),

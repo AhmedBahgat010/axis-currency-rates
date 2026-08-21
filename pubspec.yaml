@@ -36,9 +36,13 @@ dependencies:
 
   # UI, Layout & Utilities
   flutter_screenutil: ^5.9.0
-  intl: ^0.20.0
+  intl: ^0.20.2
   shimmer: ^3.0.0
   fl_chart: ^0.71.0
+
+  # Localization
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -53,3 +57,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
+
