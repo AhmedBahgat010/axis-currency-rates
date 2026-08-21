@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/usecases/get_historical_rates.dart';
 import 'currency_detail_event.dart';
 import 'currency_detail_state.dart';
-
+ 
 class CurrencyDetailBloc extends Bloc<CurrencyDetailEvent, CurrencyDetailState> {
   final GetHistoricalRates getHistoricalRates;
 

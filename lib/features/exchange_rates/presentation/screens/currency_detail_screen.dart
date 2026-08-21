@@ -234,8 +234,6 @@ class _CurrencyDetailScreenState extends State<CurrencyDetailScreen> {
               ],
             ),
             SizedBox(height: 16.h),
-
-            // Interactive Line Chart with isolated error handling & shimmer
             BlocBuilder<CurrencyDetailBloc, CurrencyDetailState>(
               builder: (context, state) {
                 if (state is HistoryLoading) {

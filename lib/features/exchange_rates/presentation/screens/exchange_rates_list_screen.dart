@@ -131,12 +131,10 @@ class _ExchangeRatesListScreenState extends State<ExchangeRatesListScreen> {
                       child: OfflineBanner(lastUpdated: lastUpdated),
                     ),
 
-                  // ── TOP CONVERTER CARD AT THE HEAD OF THE MAIN SCREEN ──
+
                   const SliverToBoxAdapter(
                     child: QuickConverterHeaderCard(),
                   ),
-
-                  // Market Rates Section Title
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
