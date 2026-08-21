@@ -18,11 +18,18 @@ A modern, high-performance Flutter application for tracking live exchange rates 
 | :---: | :---: | :---: |
 | <img src="docs/screenshots/home_screen.png" width="260" alt="Home Screen"/> | <img src="docs/screenshots/detail_screen.png" width="260" alt="Detail Screen"/> | <img src="docs/screenshots/offline_mode.png" width="260" alt="Offline Mode"/> |
 
+### 🧮 Interactive Quick Converter & Currency Switcher
+
+| Instant Currency Conversion & Swap | Currency Selection Modal |
+| :---: | :---: |
+| <img src="docs/screenshots/quick_converter.png" width="360" alt="Quick Converter Card"/> | <img src="docs/screenshots/select_currency.png" width="250" alt="Select Currency Modal"/> |
+
 ---
 
 ## ✨ Features
 
 - 🚀 **Real-Time Exchange Rates**: Live exchange rates against EGP for major world currencies (USD, EUR, GBP, SAR, JPY).
+- 🧮 **Interactive Quick Converter**: Real-time currency calculator with one-tap bidirectional swap (`EGP ⇄ USD/EUR/GBP/SAR/JPY`) and search modal.
 - 📈 **7-Day Price Action Chart**: Interactive line chart (`fl_chart`) displaying 7-day rate trends for each currency.
 - 📦 **Offline-First Caching (Hive)**: Persists fetched rates locally so the app works seamlessly without an internet connection, displaying an offline banner with the exact last update timestamp.
 - 🔄 **Auto-Sync on Reconnect**: Automatically refreshes data when internet connectivity is restored.
